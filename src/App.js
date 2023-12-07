@@ -14,11 +14,15 @@ export default function App() {
     setItems((items) => [...items, item]);
   }
 
+  function handleDeleteItem(id) {
+    setItems((items) => items.filter((item) => item.id !== id));
+  }
+
   return (
     <div className="app">
-      <Logo />;
-      <Form onAddItem={handleAddItem} />;
-      <PackingList items={items} />
+      <Logo />
+      <Form onAddItem={handleAddItem} />
+      <PackingList items={items} onDeleteItem={handleDeleteItem} />
       <Stats />
     </div>
   );
@@ -72,25 +76,26 @@ Creating N element in an array
   );
 }
 
-function PackingList({ items }) {
+function PackingList({ items, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item item={item} key={item.id} onDeleteItem={onDeleteItem} />
         ))}
       </ul>
     </div>
   );
 }
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       <input type="checkbox" />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      {/* Here in onClick, we have to use callback function { ()=> } so that we can pass the item id while calling the onDeleteItem function. If we just pass the function 'onDeleteItem' it would pass event object (e) which is of no use to us. And if we passed id directly { onDeleteItem(id) } like this, this would immedietely call the onDeleteItem function without onClick event. So by adding a callback function, we are giving the power of calling onDeleteItem function to 'onClick' */}
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
