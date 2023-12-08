@@ -10,20 +10,28 @@ export default function App() {
   // Uplifting state
   const [items, setItems] = useState([]);
 
+  // Add item
   function handleAddItem(item) {
     setItems((items) => [...items, item]);
   }
 
+  // Delete item
   function handleDeleteItem(id) {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  // Tick packed/unpacked
   function handleToggleItem(id) {
     setItems((items) =>
       items.map((item) =>
         item.id === id ? { ...item, packed: !item.packed } : item
       )
     );
+  }
+
+  // Clear item list
+  function handleClearList() {
+    setItems([]);
   }
 
   return (
@@ -34,6 +42,7 @@ export default function App() {
         items={items}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
@@ -88,7 +97,7 @@ Creating N element in an array
   );
 }
 
-function PackingList({ items, onDeleteItem, onToggleItem }) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
   const [sortBy, setSortBy] = useState("input");
 
   // Derived state -> calculate from items state
@@ -124,6 +133,8 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
         </select>
+
+        <button onClick={onClearList}>Clear list</button>
       </div>
     </div>
   );
